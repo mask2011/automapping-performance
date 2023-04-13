@@ -2,6 +2,7 @@
 
 using MappersBenchmark.Automapper;
 using MappersBenchmark.DTOs;
+using MappersBenchmark.Mapperly;
 using MappersBenchmark.Method;
 using MappersBenchmark.Models;
 
@@ -44,6 +45,7 @@ public class MappersDebug
             "Method" => MethodPersons(_persons),
             "Mapster" => MapsterPersons(_persons),
             "AutoMapper" => AutoMapperPersons(_persons),
+            "Mapperly" => MapperlyPersons(_persons),
             _ => throw new Exception("Wrong Method")
         };
 
@@ -66,6 +68,7 @@ public class MappersDebug
             "Method" => MethodPerson(_person),
             "Mapster" => MapsterPerson(_person),
             "AutoMapper" => AutoMapperPerson(_person),
+            "Mapperly" => MapperlyPerson(_person),
             _ => throw new Exception("Wrong Method")
         };
 
@@ -92,6 +95,11 @@ public class MappersDebug
         return _mapper.Map<List<Person>, List<PersonDto>>(_persons);
     }
 
+    List<PersonDto> MapperlyPersons(List<Person> persons)
+    {
+        return PersonMapper.MapPersonsToPersonDtos(_persons);
+    }
+
     PersonDto MethodPerson(Person person)
     {
         return MethodMappingProfile.MapPerson(person);
@@ -105,5 +113,10 @@ public class MappersDebug
     PersonDto AutoMapperPerson(Person person)
     {
         return _mapper.Map<Person, PersonDto>(_person);
+    }
+
+    PersonDto MapperlyPerson(Person person)
+    {
+        return PersonMapper.MapPersonToPersonDto(_person);
     }
 }

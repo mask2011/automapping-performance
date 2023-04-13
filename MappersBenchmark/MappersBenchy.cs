@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 
 using MappersBenchmark.Automapper;
 using MappersBenchmark.DTOs;
+using MappersBenchmark.Mapperly;
 using MappersBenchmark.Method;
 using MappersBenchmark.Models;
 
@@ -50,6 +51,11 @@ public class MappersBenchy
         _mapper.Map<List<Person>, List<PersonDto>>(_persons);
     }
 
+    [Benchmark]
+    public void MapperlyBenchmarkPersons()
+    {
+        PersonMapper.MapPersonsToPersonDtos(_persons);
+    }
 
     [Benchmark]
     public void MethodBenchmarkPerson()
@@ -67,5 +73,11 @@ public class MappersBenchy
     public void AutoMapperBenchmarkPerson()
     {
         _mapper.Map<Person, PersonDto>(_person);
+    }
+
+    [Benchmark]
+    public void MapperlyBenchmarkPerson()
+    {
+        PersonMapper.MapPersonToPersonDto(_person);
     }
 }
