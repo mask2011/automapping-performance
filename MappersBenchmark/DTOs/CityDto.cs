@@ -1,9 +1,8 @@
-﻿namespace MappersBenchmark.DTOs
-{
-    internal class CityDto
-    {
-        public int Id { get; set; }
+﻿namespace MappersBenchmark.DTOs;
 
-        public string Name { get; set; }
-    }
+internal class CityDto
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
 }

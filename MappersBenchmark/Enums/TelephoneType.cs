@@ -1,8 +1,7 @@
-﻿namespace MappersBenchmark.Enums
+﻿namespace MappersBenchmark.Enums;
+
+public enum TelephoneType
 {
-    public enum TelephoneType
-    {
-        Personal,
-        Company
-    }
+    Personal,
+    Company
 }

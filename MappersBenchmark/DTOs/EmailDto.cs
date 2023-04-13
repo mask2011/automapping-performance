@@ -1,8 +1,7 @@
-﻿namespace MappersBenchmark.DTOs
+﻿namespace MappersBenchmark.DTOs;
+
+internal class EmailDto
 {
-    internal class EmailDto
-    {
-        public int Id { get; set; }
-        public string EmailAddress { get; set; }
-    }
+    public int Id { get; set; }
+    public string EmailAddress { get; set; }
 }

@@ -1,8 +1,7 @@
-﻿namespace MappersBenchmark.Enums
+﻿namespace MappersBenchmark.Enums;
+
+internal enum AddressType
 {
-    internal enum AddressType
-    {
-        Home,
-        Work
-    }
+    Home,
+    Work
 }
