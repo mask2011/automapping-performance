@@ -1,107 +1,109 @@
 ﻿using AutoMapper;
+
 using MappersBenchmark.Automapper;
 using MappersBenchmark.DTOs;
 using MappersBenchmark.Method;
 using MappersBenchmark.Models;
+
 using Mapster;
+
 using System.Diagnostics;
 
-namespace MappersBenchmark
+namespace MappersBenchmark;
+
+public class MappersDebug
 {
-    public class MappersDebug
+    List<Person> _persons;
+    List<PersonDto> _personDtos;
+    Person _person;
+    PersonDto _personDto;
+    IMapper _mapper;
+    Stopwatch _stopwatch;
+
+    public MappersDebug()
     {
-        List<Person> _persons;
-        List<PersonDto> _personDtos;
-        Person _person;
-        PersonDto _personDto;
-        IMapper _mapper;
-        Stopwatch _stopwatch;
+        _persons = DataSeed.GetPersons(1000);
+        _person = DataSeed.GetPerson();
 
-        public MappersDebug()
+        var config = new MapperConfiguration(cfg =>
+            cfg.AddProfile(new AutoMapperMappingProfile()));
+
+        _mapper = config.CreateMapper();
+
+        _stopwatch = new Stopwatch();
+    }
+
+    public void MapPersons(string methodType)
+    {
+        Console.WriteLine($"Method Type: {methodType}");
+
+        _stopwatch.Start();
+
+        _personDtos = methodType switch
         {
-            _persons = DataSeed.GetPersons(1000);
-            _person = DataSeed.GetPerson();
+            "Method" => MethodPersons(_persons),
+            "Mapster" => MapsterPersons(_persons),
+            "AutoMapper" => AutoMapperPersons(_persons),
+            _ => throw new Exception("Wrong Method")
+        };
 
-            var config = new MapperConfiguration(cfg =>
-                cfg.AddProfile(new AutoMapperMappingProfile()));
+        _stopwatch.Stop();
 
-            _mapper = config.CreateMapper();
+        Console.WriteLine($"Time elapsed: {_stopwatch.Elapsed}");
+        Console.WriteLine("Press Enter...");
 
-            _stopwatch = new Stopwatch();
-        }
+        Console.ReadLine();
+    }
 
-        public void MapPersons(string methodType)
+    public void MapPerson(string methodType)
+    {
+        Console.WriteLine($"Method Type: {methodType}");
+
+        _stopwatch.Start();
+
+        _personDto = methodType switch
         {
-            Console.WriteLine($"Method Type: {methodType}");
+            "Method" => MethodPerson(_person),
+            "Mapster" => MapsterPerson(_person),
+            "AutoMapper" => AutoMapperPerson(_person),
+            _ => throw new Exception("Wrong Method")
+        };
 
-            _stopwatch.Start();
+        _stopwatch.Stop();
 
-            _personDtos = methodType switch
-            {
-                "Method" => MethodPersons(_persons),
-                "Mapster" => MapsterPersons(_persons),
-                "AutoMapper" => AutoMapperPersons(_persons),
-                _ => throw new Exception("Wrong Method")
-            };
+        Console.WriteLine($"Time elapsed: {_stopwatch.Elapsed}");
+        Console.WriteLine("Press Enter...");
 
-            _stopwatch.Stop();
+        Console.ReadLine();
+    }
 
-            Console.WriteLine($"Time elapsed: {_stopwatch.Elapsed}");
-            Console.WriteLine("Press Enter...");
+    List<PersonDto> MethodPersons(List<Person> persons)
+    {
+        return MethodMappingProfile.MapPersons(persons);
+    }
 
-            Console.ReadLine();
-        }
+    List<PersonDto> MapsterPersons(List<Person> persons)
+    {
+        return persons.Adapt<List<PersonDto>>();
+    }
 
-        public void MapPerson(string methodType)
-        {
-            Console.WriteLine($"Method Type: {methodType}");
+    List<PersonDto> AutoMapperPersons(List<Person> persons)
+    {
+        return _mapper.Map<List<Person>, List<PersonDto>>(_persons);
+    }
 
-            _stopwatch.Start();
+    PersonDto MethodPerson(Person person)
+    {
+        return MethodMappingProfile.MapPerson(person);
+    }
 
-            _personDto = methodType switch
-            {
-                "Method" => MethodPerson(_person),
-                "Mapster" => MapsterPerson(_person),
-                "AutoMapper" => AutoMapperPerson(_person),
-                _ => throw new Exception("Wrong Method")
-            };
+    PersonDto MapsterPerson(Person person)
+    {
+        return person.Adapt<PersonDto>();
+    }
 
-            _stopwatch.Stop();
-
-            Console.WriteLine($"Time elapsed: {_stopwatch.Elapsed}");
-            Console.WriteLine("Press Enter...");
-
-            Console.ReadLine();
-        }
-
-        List<PersonDto> MethodPersons(List<Person> persons)
-        {
-            return MethodMappingProfile.MapPersons(persons);
-        }
-
-        List<PersonDto> MapsterPersons(List<Person> persons)
-        {
-            return persons.Adapt<List<PersonDto>>();
-        }
-
-        List<PersonDto> AutoMapperPersons(List<Person> persons)
-        {
-            return _mapper.Map<List<Person>, List<PersonDto>>(_persons);
-        }
-
-        PersonDto MethodPerson(Person person)
-        {
-            return MethodMappingProfile.MapPerson(person);
-        }
-
-        PersonDto MapsterPerson(Person person)
-        {
-            return person.Adapt<PersonDto>();
-        }
-
-        PersonDto AutoMapperPerson(Person person)
-        {
-            return _mapper.Map<Person, PersonDto>(_person);
-        }
+    PersonDto AutoMapperPerson(Person person)
+    {
+        return _mapper.Map<Person, PersonDto>(_person);
     }
 }
